@@ -52,6 +52,7 @@ class ProfileController extends Controller
 
                 // Update the user's profile picture URL in the database
                 $user->profile_picture = $url;
+                /** @var \App\Models\User $user **/
                 $user->save();
 
                 return redirect()->back()->with('success', 'Profile picture updated successfully.');
