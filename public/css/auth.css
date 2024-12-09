@@ -1,0 +1,45 @@
+body {
+    background-color: var(--secondary_purple) !important;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    border-radius: 0 !important;
+    padding: 20px 40px;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+    height: 550px !important;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--white);
+}
+
+.auth-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: var(--main_purple);
+    font-weight: bold;
+    padding: 5px 30px;
+    border-radius: 100px;
+}
+
+.hyperlink {
+    color: var(--main_purple);
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.hyperlink:hover {
+    color: var(--main_purple);
+}
