@@ -24,8 +24,10 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            /* background-color:var(--dark_gray); */
-            /* color: var(--main_purple); */
+        }
+        .container {
+            padding: 0 !important;
+            margin: 0 !important;
         }
     </style>
 </head>

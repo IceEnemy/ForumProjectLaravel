@@ -1,9 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.nav')
 
 @section('title', 'Profile')
 
-@section('content')
-<div class="container mt-5">
+@section('page-title', 'Profile')
+
+@section('main-content')
+<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
             @if(session('success'))

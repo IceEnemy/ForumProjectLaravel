@@ -12,8 +12,9 @@ body {
 .card {
     border-radius: 0 !important;
     padding: 20px 40px;
-    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
-    height: 550px !important;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    /* height: 550px !important; */
+    min-height: 550px;
     width: 450px;
     display: flex;
     flex-direction: column;
