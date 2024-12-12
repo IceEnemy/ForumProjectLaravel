@@ -18,6 +18,7 @@
 
     <!-- Global CSS Variables -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/iconify.css')}}">
 
     @stack('styles')
 
@@ -28,6 +29,7 @@
         .container {
             padding: 0 !important;
             margin: 0 !important;
+            max-width: 100% !important;
         }
     </style>
 </head>
