@@ -61,20 +61,31 @@ class CommunityController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'header_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'rules' => 'nullable|string|max:1000',
         ]);
 
-        $imageUrl = null;
+        $headerImageUrl = null;
+        $profileImageUrl = null;
+
         if ($request->hasFile('header_image')) {
-            $file = $request->file('header_image');
-            $path = 'community_images/' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $imageUrl = $firebaseService->uploadFile($file, $path);
+            $headerFile = $request->file('header_image');
+            $headerPath = 'community_headers/' . uniqid() . '.' . $headerFile->getClientOriginalExtension();
+            $headerImageUrl = $firebaseService->uploadFile($headerFile, $headerPath);
+        }
+        if ($request->hasFile('profile_image')) {
+            $profileFile = $request->file('profile_image');
+            $profilePath = 'community_profiles/' . uniqid() . '.' . $profileFile->getClientOriginalExtension();
+            $profileImageUrl = $firebaseService->uploadFile($profileFile, $profilePath);
         }
 
         // Create the community
         Community::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'header_image' => $imageUrl,
+            'header_image' => $headerImageUrl,
+            'rules' => $request->input('rules', null),
+            'profile_image' => $profileImageUrl,
             'owner_id' => auth()->id(), // Store the ID of the authenticated user as the community owner
         ]);
 

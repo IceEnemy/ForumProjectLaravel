@@ -34,6 +34,8 @@ Route::middleware(['auth.check'])->group(function () {
     // Create community page
     Route::get('/community/create', [CommunityController::class, 'create'])->name('community.create');
     Route::post('/community', [CommunityController::class, 'store'])->name('community.store');
+    Route::post('/communities', [CommunityController::class, 'store'])->name('community.store');
+
 });
 
 Route::get('/home', [CommunityController::class, 'index'])->name('home');
