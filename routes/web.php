@@ -31,9 +31,7 @@ Route::middleware(['auth.check'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
     Route::post('/profile/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile.upload');
 
-    // Create community page
-    Route::get('/community/create', [CommunityController::class, 'create'])->name('community.create');
-    Route::post('/community', [CommunityController::class, 'store'])->name('community.store');
+    // Create community 
     Route::post('/communities', [CommunityController::class, 'store'])->name('community.store');
 
 });

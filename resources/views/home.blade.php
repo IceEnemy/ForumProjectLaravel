@@ -6,32 +6,32 @@
 <style>
     body, html {
         height: 100%;
-        overflow-y: auto; /* Enable vertical scrolling */
+        overflow-y: auto; 
     }
 
     .container-fluid {
-        min-height: 100vh; /* Ensure the container takes at least the full viewport height */
+        min-height: 100vh;
     }
 
     .community-image-container {
-        width: 140px; /* Adjust this value as needed */
+        width: 140px; 
         height: 132px;
     }
 
     .community-card {
-        border-top: 0.75px solid #CCCCCC; /* Top border with the specified color and thickness */
-        border-bottom: 0.75px solid #CCCCCC; /* Bottom border with the specified color and thickness */
-        border-left: none; /* Remove left border */
-        border-right: none; /* Remove right border */
+        border-top: 0.75px solid #CCCCCC; 
+        border-bottom: 0.75px solid #CCCCCC; 
+        border-left: none; 
+        border-right: none; 
         border-radius: 0;
     }
 
     .community-card + .community-card {
-        margin-top: -2px; /* Adjust the gap between adjacent cards to avoid overlap of borders */
+        margin-top: -2px; 
     }
 
     .community-card .card-body {
-        min-height: 120px; /* Ensure content doesn't overlap */
+        min-height: 120px; 
     }
 
     .community-card .members-text {
@@ -39,56 +39,54 @@
         font-weight: 600;
     }
 
-    /* Adjust the search bar styles */
     .form-control {
-        border-right: 0; /* Remove the right border to connect with button */
-        border-radius: 30px 0 0 30px; /* Round the left side */
+        border-right: 0; 
+        border-radius: 30px 0 0 30px; 
         border: 1px solid #CCCCCC;
-        background-color: #EEEEEE; /* Light border color to match button */
+        background-color: #EEEEEE; 
     }
 
     .btn {
-        border-radius: 0 30px 30px 0; /* Round the right side */
-        border: 1px solid #CCCCCC; /* Same border color as search input */
-        border-left: 0; /* Remove the left border to connect with input */
-        background-color: #EEEEEE; /* Ensure button background matches search input */
-        color: black; /* Make button text color consistent */
+        border-radius: 0 30px 30px 0;
+        border: 1px solid #CCCCCC; 
+        border-left: 0; 
+        background-color: #EEEEEE; 
+        color: black; 
     }
     .btn:hover, .btn:focus {
-        border-color: #CCCCCC; /* Ensure no change in border color on hover/focus */
-        background-color: #EEEEEE; /* Ensure no change in background on hover/focus */
-        color: black; /* Ensure no change in text color on hover/focus */
+        border-color: #CCCCCC;
+        background-color: #EEEEEE; 
+        color: black; 
     }
     .btn i {
-        padding-right: 10px; /* Adjust icon padding if necessary */
+        padding-right: 10px; 
     }
     .btn-create-community {
         background-color: white;
         border: 1px solid black;
         color: black;
         font-weight: bold;
-        border-radius: 30px; /* Fully rounded corners */
+        border-radius: 30px; 
     }
 
     .btn-create-community:hover {
-        background-color: #E6E3FF; /* Hover background color */
-        color: black; /* Keep text color the same on hover */
+        background-color: #E6E3FF; 
+        color: black; 
     }
 
     .btn-create-community:focus, .btn-create-community:active {
-        background-color: white !important; /* Keep the original background color */
-        border-color: black !important;     /* Keep the original border color */
-        color: black !important;            /* Keep text color black */
+        background-color: white !important; 
+        border-color: black !important;     
+        color: black !important;            
     }
 
-    /* Override the active/focus state to allow hover effect */
     .btn-create-community:focus:hover, .btn-create-community:active:hover {
-        background-color: #E6E3FF !important; /* Hover effect when clicked or focused */
+        background-color: #E6E3FF !important; 
         color: black !important;
     }
 
     .btn-primary {
-        border-radius: 30px; /* Make the button fully rounded */
+        border-radius: 30px; 
         border: 1px solid #CCCCCC;
     }
 
@@ -97,18 +95,16 @@
 <div class="container-fluid mt-5">
     <div class="row justify-content-start align-items-center">
         <div class="col-12 d-flex">
-            <!-- Button to create a new community -->
             <button type="button" class="btn btn-create-community mb-3" data-bs-toggle="modal" data-bs-target="#createCommunityModal" onclick="checkLoginBeforeModal()">
                 + Create Community
             </button>
 
-            <!-- Search bar -->
             <div class="ms-3 flex-grow-1">
                 <form method="GET" action="{{ route('home') }}" class="d-flex">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Search communities..." aria-label="Search communities">
                         <button class="btn" type="submit">
-                            <i class="bi bi-search"></i> <!-- Bootstrap icon for search -->
+                            <i class="bi bi-search"></i>
                         </button>
                     </div>
                 </form>
@@ -126,19 +122,16 @@
         </div>
     @endif
 
-    <!-- Message when no communities are found -->
     @if($communities->isEmpty())
         <div class="alert alert-warning mt-3">
             No communities found for your search.
         </div>
     @endif
 
-    <!-- List all communities -->
     <div id="communityList">
         @foreach ($communities as $community)
             <div class="card mb-0 community-card">
                 <div class="row g-0">
-                    <!-- Community Header Image -->
                     <div class="col-md-1 d-flex align-items-center justify-content-center p-3 community-image-container">
                         <img 
                             src="{{ $community->profile_image ?? 'https://via.placeholder.com/150' }}" 
@@ -147,7 +140,6 @@
                             style="width: 100px; height: 100px; object-fit: cover;">
                     </div>
 
-                    <!-- Community Info -->
                     <div class="col-md-10 d-flex align-items-center justify-content-center">
                         <div class="card-body">
                             <h5 class="card-title" style="font-size: 25px; font-weight: bold;">{{ $community->name }}</h5>
@@ -156,7 +148,6 @@
                     </div>
                 </div>
 
-                <!-- Members count positioned at the top-right corner -->
                 <p class="card-text position-absolute top-0 end-0 p-3 members-text text-muted">
                     Members: {{ $community->members->count() }}
                 </p>
@@ -165,7 +156,6 @@
     </div>
 </div>
 
-<!-- Create Community Modal -->
 <div class="modal fade" id="createCommunityModal" tabindex="-1" aria-labelledby="createCommunityModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 800px;">
         <div class="modal-content">
@@ -215,13 +205,9 @@
 <script>
 function checkLoginBeforeModal() {
     if (!{{ Auth::check() ? 'true' : 'false' }}) {
-        // Show an alert or an error message before redirecting
         alert('You need to log in first to create a community.');
-
-        // Redirect to login page with an error flag in URL
         window.location.href = '{{ route('login') }}?error=true';
     } else {
-        // Proceed with showing the modal if logged in
         $('#createCommunityModal').modal('show');
     }
 }
