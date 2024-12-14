@@ -13,7 +13,7 @@ class AuthCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        // Use Laravel's built-in authentication check
+        
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
         }

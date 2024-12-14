@@ -4,6 +4,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommunityController;
 use Illuminate\Support\Facades\Route;
 
 // Registration Routes
@@ -29,4 +30,10 @@ Route::middleware(['auth.check'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
     Route::post('/profile/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile.upload');
+
+    // Create community page
+    Route::get('/community/create', [CommunityController::class, 'create'])->name('community.create');
+    Route::post('/community', [CommunityController::class, 'store'])->name('community.store');
 });
+
+Route::get('/home', [CommunityController::class, 'index'])->name('home');

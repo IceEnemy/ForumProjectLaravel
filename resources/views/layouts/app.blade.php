@@ -19,6 +19,8 @@
     <!-- Global CSS Variables -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
     @stack('styles')
 
     <style>
