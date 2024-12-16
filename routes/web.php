@@ -4,7 +4,12 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\CommunityController;
 use Illuminate\Support\Facades\Route;
+
+// Landing Page
+Route::get('/', [LandingPageController::class, 'showLandingPage'])->name('landing.page');
 
 // Registration Routes
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('register');
@@ -29,4 +34,10 @@ Route::middleware(['auth.check'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show');
     Route::post('/profile/upload', [ProfileController::class, 'uploadProfilePicture'])->name('profile.upload');
+
+    // Create community 
+    Route::post('/communities', [CommunityController::class, 'store'])->name('community.store');
+
 });
+
+Route::get('/home', [CommunityController::class, 'index'])->name('home');

@@ -11,6 +11,7 @@ class Community extends Model
     protected $fillable = [
         'name',
         'header_image',
+        'profile_image',
         'description',
         'rules',
         'owner_id',
@@ -25,6 +26,7 @@ class Community extends Model
     {
         return $this->belongsToMany(User::class, 'community_user');
     }
+
 
     public function administrators()
     {
