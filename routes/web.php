@@ -50,7 +50,16 @@ Route::middleware(['auth.check'])->group(function () {
     Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
     Route::post('/post/{post}/toggle-upvote', [PostController::class, 'toggleUpvote'])->name('post.toggleUpvote');
     Route::post('/post/{post}/toggle-downvote', [PostController::class, 'toggleDownvote'])->name('post.toggleDownvote');
+
+    
 });
+
+Route::middleware(['auth.check', 'check.post.permissions'])->group(function () {
+    Route::get('/post/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('/post/{post}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.delete');
+});
+
 
 Route::get('/home', [CommunityController::class, 'index'])->name('home');
 Route::get('/community/{id}', [CommunityController::class, 'show'])->name('community.show');

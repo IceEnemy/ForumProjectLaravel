@@ -152,13 +152,15 @@
                 <div class="card mb-0 community-card position-relative hover-gray">
                     <div class="row g-0">
                         <!-- Community Profile Image -->
-                        <div class="col-md-1 align-items-center justify-content-center p-3 community-image-container">
-                            <img 
-                                src="{{ $community->profile_image ?? 'https://via.placeholder.com/150' }}" 
-                                alt="{{ $community->name }}" 
-                                class="img-fluid rounded-circle" 
-                                style="width: 100px; height: 100px; object-fit: cover;">
-                        </div>
+                        @if ($community->profile_image)
+                            <div class="col-md-1 align-items-center justify-content-center p-3 community-image-container">
+                                <img 
+                                    src="{{ $community->profile_image }}" 
+                                    alt="{{ $community->name }}" 
+                                    class="img-fluid rounded-circle" 
+                                    style="width: 100px; height: 100px; object-fit: cover;">
+                            </div>
+                        @endif
     
                         <!-- Community Details -->
                         <div class="col-md-10 d-flex align-items-center justify-content-center">

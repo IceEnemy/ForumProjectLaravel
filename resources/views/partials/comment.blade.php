@@ -1,4 +1,4 @@
-<div class="mb-3 ms-{{ $comment->parent_id ? 4 : 0 }}">
+<div class="mb-3 ps-3 border-start ms-{{ $comment->parent_id ? 4 : 0 }}">
     <!-- Comment Header -->
     <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex align-items-center">

@@ -4,11 +4,33 @@
 
 @section('main-content')
 <div class="container mt-4">
-    <!-- Back Button -->
-    <div class="mb-3">
-        <a href="{{ route('community.show', $post->community_id) }}" class="btn text-decoration-none">
-            <i class="bi bi-arrow-left"></i> Back
-        </a>
+    <!-- Back Button and Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+        <div>
+            <a href="{{ route('community.show', $post->community_id) }}" class="btn text-decoration-none">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+        <div class="d-flex gap-2">
+            @if (auth()->id() === $post->user_id)
+                <a href="{{ route('post.edit', $post->id) }}" class="btn btn-primary btn-action">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+            @endif
+            @if (
+                auth()->id() === $post->user_id || 
+                auth()->id() === $post->community->owner_id || 
+                $post->community->administrators->contains(auth()->user())
+            )
+                <form action="{{ route('post.delete', $post->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-action">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </form>
+            @endif
+        </div>
     </div>
 
     <!-- Post Content Section -->
@@ -20,14 +42,18 @@
                 <img 
                     src="{{ $post->author->profile_picture ?? 'https://via.placeholder.com/50' }}" 
                     class="rounded-circle me-3" 
-                    style="width: 50px; height: 50px; object-fit: cover;"
-                >
+                    style="width: 50px; height: 50px; object-fit: cover;">
                 <h5 class="mb-0 fw-bold">{{ $post->author->username }}</h5>
             </div>
 
             <!-- Post Title and Date -->
             <h2 class="fw-bold">{{ $post->title }}</h2>
-            <p class="text-muted">{{ $post->created_at->format('d/m/Y') }}</p>
+            <p class="text-muted">
+                Created: {{ $post->created_at->format('d/m/Y H:i') }}
+                @if ($post->updated_at && $post->updated_at != $post->created_at)
+                    <br>Updated: {{ $post->updated_at->format('d/m/Y H:i') }}
+                @endif
+            </p>
 
             <!-- Post Image -->
             @if ($post->image)
@@ -35,33 +61,31 @@
                     src="{{ $post->image }}" 
                     alt="Post Image" 
                     class="img-fluid mb-4 rounded" 
-                    style="width: 100%; object-fit: cover;"
-                >
+                    style="width: 100%; object-fit: cover;">
             @endif
 
             <!-- Post Body -->
             <p>{{ $post->content }}</p>
 
-            <!-- Upvote and Downvote Buttons -->
+            <!-- Upvote and Downvote Section -->
             <div class="d-flex align-items-center my-4">
-                <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="me-2">
-                    @csrf
-                    <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'text-primary' : '' }}">
-                        <i class="bi bi-arrow-up" style="font-size: 1.5rem;"></i>
-                    </button>
-                </form>
-
-                <span class="fw-bold mx-2">{{ $post->upvotes->count() - $post->downvotes->count() }}</span>
-
-                <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="me-2">
-                    @csrf
-                    <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'text-danger' : '' }}">
-                        <i class="bi bi-arrow-down" style="font-size: 1.5rem;"></i>
-                    </button>
-                </form>
+                <div class="vote-container d-flex align-items-center">
+                    <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                            <span class="mdi--arrow-up-bold"></span>
+                        </button>
+                    </form>
+                    <span class="mx-2 fw-bold">{{ $post->upvotes->count() - $post->downvotes->count() }}</span>
+                    <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                            <span class="mdi--arrow-down-bold"></span>
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <!-- Comment Section Placeholder -->
             <!-- Comment Input Form -->
             <div class="d-flex mb-4">
                 <img src="{{ auth()->user()->profile_picture ?? 'https://via.placeholder.com/50' }}" 
@@ -75,11 +99,10 @@
                 </form>
             </div>
 
-            <!-- Comments List -->
+            <!-- Comments Section -->
             @foreach ($comments as $comment)
                 @include('partials.comment', ['comment' => $comment])
             @endforeach
-
         </div>
 
         <!-- Right Column: Other Posts in Community -->
@@ -90,12 +113,19 @@
                     @forelse ($communityPosts as $communityPost)
                         <a href="{{ route('post.show', $communityPost->id) }}" class="text-decoration-none">
                             <div class="mb-3 position-relative" style="height: 120px; border-radius: 8px; overflow: hidden;">
-                                <img 
-                                    src="{{ $communityPost->image ?? 'https://via.placeholder.com/200' }}" 
-                                    alt="Post Image" 
-                                    class="w-100 h-100" 
-                                    style="object-fit: cover; filter: brightness(50%);"
-                                >
+                                @if ($communityPost->image)
+                                    <img 
+                                        src="{{ $communityPost->image }}" 
+                                        alt="Post Image" 
+                                        class="w-100 h-100" 
+                                        style="object-fit: cover; filter: brightness(50%);">
+                                @else
+                                    <div 
+                                        class="w-100 h-100" 
+                                        style="background-color: var(--gray); display: flex; justify-content: center; align-items: center;">
+                                        <span class="text-muted">No Image</span>
+                                    </div>
+                                @endif
                                 <div class="position-absolute text-white p-2" style="bottom: 0; left: 0; right: 0;">
                                     <p class="mb-0 fw-bold">{{ $communityPost->title }}</p>
                                 </div>
@@ -113,45 +143,67 @@
 
 @push('styles')
 <style>
-    .bi-arrow-up, .bi-arrow-down {
-        cursor: pointer;
-        transition: color 0.2s ease-in-out;
-    }
-
-    .text-primary .bi-arrow-up, 
-    .text-danger .bi-arrow-down {
-        color: inherit;
-    }
-
-    .position-relative img:hover {
-        filter: brightness(70%);
-    }
-
-    /* Scrollable posts box with sticky positioning */
-    .sticky-box {
-        position: sticky;
-        top: 20px; /* Sticks below the top margin */
-        height: 70vh;
-        /* overflow-y: auto; */
-    }
-
-    /* Custom scrollbar styling */
-    .sticky-box::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .sticky-box::-webkit-scrollbar-thumb {
-        background-color: #cccccc;
-        border-radius: 4px;
-    }
-
-    .sticky-box::-webkit-scrollbar-thumb:hover {
-        background-color: #aaaaaa;
-    }
-    .row, .container, .col-lg-3 {
-        overflow-y: visible !important;
-        position: relative;
-        height: 100%;
-    }
+.hover-gray:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+.not-voted {
+    color: var(--black);
+}
+.voted {
+    color: var(--main_purple);
+}
+.vote-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--tertiary_purple);
+    border-radius: 30px;
+    padding: 5px 10px;
+    max-width: fit-content;
+}
+.vote-container button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--black);
+    font-size: 1.2rem;
+    padding: 0;
+    transition: color 0.3s ease-in-out;
+}
+.vote-container button span {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+.vote-container .voted {
+    color: var(--main_purple);
+}
+.vote-container button:hover {
+    color: var(--main_purple);
+}
+.sticky-box {
+    position: sticky;
+    top: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.sticky-box::-webkit-scrollbar {
+    width: 8px;
+}
+.sticky-box::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+.sticky-box::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+}
+.btn-action {
+    width: 100px;
+    text-align: center;
+}
 </style>
 @endpush

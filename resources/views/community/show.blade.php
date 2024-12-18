@@ -14,13 +14,20 @@
     <!-- Community Header Section -->
     <div class="card mb-4 shadow-sm">
         @if($community->header_image)
-            <img src="{{ $community->header_image }}" alt="Community Header" class="card-img-top" style="height: 150px; object-fit: cover;">
-        @else
-            <div class="bg-light" style="height: 150px;"></div>
+            <img src="{{ $community->header_image }}" 
+                alt="Community Header" 
+                class="card-img-top" 
+                style="height: 150px; object-fit: cover;">
         @endif
+
         <div class="d-flex p-4 align-items-center">
-            <img src="{{ $community->profile_image ?? 'https://via.placeholder.com/100' }}" 
-                 alt="Community Profile" class="rounded-circle me-4" style="width: 100px; height: 100px; object-fit: cover;">
+            @if($community->profile_image)
+                <img src="{{ $community->profile_image }}" 
+                    alt="Community Profile" 
+                    class="rounded-circle me-4" 
+                    style="width: 100px; height: 100px; object-fit: cover;">
+            @endif
+
             <div class="flex-grow-1">
                 <h2 class="mb-1 fw-bold">{{ $community->name }}</h2>
                 <p class="text-muted mb-1">Created {{ $community->created_at->format('d F Y') }}</p>
@@ -39,7 +46,7 @@
     </div>
 
     <!-- Add Post, Search, and Sort -->
-    <div class="border-top border-bottom py-3 mb-4">
+    <div class="border-top border-bottom py-3 mb-4 sticky-header">
         <div class="d-flex justify-content-between align-items-center gap-5">
             <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createPostModal">+ Add Post</button>
             <form method="GET" action="{{ route('community.show', $community->id) }}" class="d-flex">
@@ -57,55 +64,50 @@
         </div>
     </div>
 
-    <!-- Posts Section -->
-    @forelse($community->posts as $post)
-        <a href="{{ route('post.show', $post->id) }}" class="text-decoration-none text-dark">
-            <div class="card mb-3 hover-gray">
-                <div class="card-body d-flex">
-                    <!-- Post Image -->
-                    @if($post->image)
-                        <img src="{{ $post->image }}" class="rounded me-3" style="width: 120px; height: 120px; object-fit: cover;">
-                    @else
-                        <div class="bg-light rounded me-3" style="width: 120px; height: 80px;"></div>
-                    @endif
-                    <!-- Post Content -->
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold">{{ $post->title }}</h5>
-                        <small class="text-muted">{{ $post->created_at->format('d/m/Y') }}</small>
-                        <p class="mb-2">{{ Illuminate\Support\Str::limit($post->content, 100) }}</p>
-                        <div>
-                            <span class="text-muted me-3"><i class="bi bi-chat"></i> Comments ({{ $post->comments->count() }})</span>
-                            <span class="text-muted d-flex align-items-center">
-                                <!-- Upvote Button -->
-                                <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'text-primary' : '' }}">
-                                        <i class="bi bi-arrow-up"></i>
-                                    </button>
-                                </form>
-                            
-                                <!-- Vote Count -->
-                                <span class="mx-2 fw-bold">
-                                    {{ $post->upvotes->count() - $post->downvotes->count() }}
+    <!-- Scrollable Posts Section -->
+    <div class="posts-container">
+        @forelse($community->posts as $post)
+            <a href="{{ route('post.show', $post->id) }}" class="text-decoration-none text-dark">
+                <div class="card mb-3 hover-gray">
+                    <div class="card-body d-flex">
+                        @if($post->image)
+                            <img src="{{ $post->image }}" 
+                                class="rounded me-3" 
+                                style="width: 120px; height: 120px; object-fit: cover;">
+                        @endif
+
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold">{{ $post->title }}</h5>
+                            <small class="text-muted">{{ $post->created_at->format('d/m/Y') }}</small>
+                            <p class="mb-2">{{ Illuminate\Support\Str::limit($post->content, 100) }}</p>
+                            <div class="d-flex">
+                                <span class="text-muted me-3 d-inline-flex align-items-center flex-shrink-0">
+                                    <i class="bi bi-chat me-1"></i> Comments ({{ $post->comments->count() }})
                                 </span>
-                            
-                                <!-- Downvote Button -->
-                                <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'text-danger' : '' }}">
-                                        <i class="bi bi-arrow-down"></i>
-                                    </button>
-                                </form>
-                            </span>
-                            
+                                <div class="vote-container d-flex align-items-center">
+                                    <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                                            <span class="mdi--arrow-up-bold"></span>
+                                        </button>
+                                    </form>
+                                    <span class="mx-2 fw-bold">{{ $post->upvotes->count() - $post->downvotes->count() }}</span>
+                                    <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                                            <span class="mdi--arrow-down-bold"></span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    @empty
-        <p>No posts yet.</p>
-    @endforelse
+            </a>
+        @empty
+            <p>No posts yet.</p>
+        @endforelse
+    </div>
 </div>
 
 <!-- Add Post Modal -->
@@ -138,6 +140,65 @@
     background-color: #f8f9fa;
     transition: background-color 0.3s;
     cursor: pointer;
+}
+.not-voted {
+    color: var(--black);
+}
+.voted {
+    color: var(--main_purple);
+}
+.vote-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--tertiary_purple);
+    border-radius: 30px;
+    padding: 5px 10px;
+    max-width: fit-content;
+}
+.vote-container button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--black);
+    font-size: 1.2rem;
+    padding: 0;
+    transition: color 0.3s ease-in-out;
+}
+.vote-container button span {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+.vote-container .voted {
+    color: var(--main_purple);
+}
+.vote-container button:hover {
+    color: var(--main_purple);
+}
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}
+.posts-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.posts-container::-webkit-scrollbar {
+    width: 8px;
+}
+.posts-container::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+.posts-container::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
 }
 </style>
 @endpush

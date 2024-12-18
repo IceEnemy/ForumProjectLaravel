@@ -106,6 +106,58 @@ class PostController extends Controller
             $post->downvotes()->attach($userId); // Add downvote
         }
 
-        return back();
+        return
+
+            back();
+    }
+
+    public function edit(Post $post)
+    {
+        return view('post.edit', compact('post'));
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $request->validate([
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Upload the new image to Firebase
+            $imageFile = $request->file('image');
+            $imagePath = 'post_images/' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+            $newImageUrl = $this->firebaseService->uploadFile($imageFile, $imagePath);
+
+            // Delete the old image from Firebase if it exists
+            if ($post->image) {
+                $this->firebaseService->deleteFile($post->image);
+            }
+
+            // Update the post's image URL
+            $post->image = $newImageUrl;
+        }
+
+        // Update the content and timestamp
+        $post->content = $request->content;
+        $post->updated_at = now();
+        $post->save();
+
+        return redirect()->route('post.show', $post->id)
+            ->with('success', 'Post updated successfully.');
+    }
+
+    public function destroy(Post $post)
+    {
+        // Delete the image from Firebase if it exists
+        if ($post->image) {
+            $this->firebaseService->deleteFile($post->image);
+        }
+
+        // Delete the post
+        $post->delete();
+
+        return redirect()->route('community.show', $post->community_id)
+            ->with('success', 'Post deleted successfully.');
     }
 }
