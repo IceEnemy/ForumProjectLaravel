@@ -48,7 +48,7 @@
         background-color: #EEEEEE; 
     }
 
-    .btn {
+    /* .btn {
         border-radius: 0 30px 30px 0;
         border: 1px solid #CCCCCC; 
         border-left: 0; 
@@ -59,10 +59,10 @@
         border-color: #CCCCCC;
         background-color: #EEEEEE; 
         color: black; 
-    }
-    .btn i {
+    } */
+    /* .btn i {
         padding-right: 10px; 
-    }
+    } */
     .btn-create-community {
         background-color: white;
         border: 1px solid black;
@@ -90,6 +90,22 @@
     .btn-primary {
         border-radius: 30px; 
         border: 1px solid #CCCCCC;
+    }
+    .hover-gray {
+        transition: background-color 0.3s ease; /* Smooth transition */
+    }
+
+    .hover-gray:hover {
+        background-color: var(--gray); /* Light gray color */
+        cursor: pointer;
+    }
+
+    .com_header{
+        position: sticky;
+        top: 0;
+    }
+    .container-fluid {
+        position: relative;
     }
 
 </style>
@@ -132,30 +148,41 @@
 
     <div id="communityList">
         @foreach ($communities as $community)
-            <div class="card mb-0 community-card">
-                <div class="row g-0">
-                    <div class="col-md-1 align-items-center justify-content-center p-3 community-image-container">
-                        <img 
-                            src="{{ $community->profile_image ?? 'https://via.placeholder.com/150' }}" 
-                            alt="{{ $community->name }}" 
-                            class="img-fluid rounded-circle" 
-                            style="width: 100px; height: 100px; object-fit: cover;">
-                    </div>
-
-                    <div class="col-md-10 d-flex align-items-center justify-content-center">
-                        <div class="card-body">
-                            <h5 class="card-title" style="font-size: 25px; font-weight: bold;">{{ $community->name }}</h5>
-                            <p class="card-text" style="font-size: 16px;">{{ Illuminate\Support\Str::limit($community->description, 150) }}</p>
+            <a href="{{ route('community.show', $community->id) }}" class="text-decoration-none text-dark">
+                <div class="card mb-0 community-card position-relative hover-gray">
+                    <div class="row g-0">
+                        <!-- Community Profile Image -->
+                        <div class="col-md-1 align-items-center justify-content-center p-3 community-image-container">
+                            <img 
+                                src="{{ $community->profile_image ?? 'https://via.placeholder.com/150' }}" 
+                                alt="{{ $community->name }}" 
+                                class="img-fluid rounded-circle" 
+                                style="width: 100px; height: 100px; object-fit: cover;">
+                        </div>
+    
+                        <!-- Community Details -->
+                        <div class="col-md-10 d-flex align-items-center justify-content-center">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 25px; font-weight: bold;">
+                                    {{ $community->name }}
+                                </h5>
+                                <p class="card-text" style="font-size: 16px;">
+                                    {{ Illuminate\Support\Str::limit($community->description, 150) }}
+                                </p>
+                            </div>
                         </div>
                     </div>
+    
+                    <!-- Members Count -->
+                    <p class="card-text position-absolute top-0 end-0 p-3 members-text text-muted">
+                        Members: {{ $community->members->count() }}
+                    </p>
                 </div>
-
-                <p class="card-text position-absolute top-0 end-0 p-3 members-text text-muted">
-                    Members: {{ $community->members->count() }}
-                </p>
-            </div>
+            </a>
         @endforeach
     </div>
+    
+    
 </div>
 
 <div class="modal fade" id="createCommunityModal" tabindex="-1" aria-labelledby="createCommunityModalLabel" aria-hidden="true">

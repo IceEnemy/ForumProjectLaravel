@@ -31,6 +31,12 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'post_upvote');
     }
 
+    public function downvotes()
+    {
+        return $this->belongsToMany(User::class, 'post_downvote');
+    }
+
+
     public function comments()
     {
         return $this->hasMany(Comment::class);

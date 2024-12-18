@@ -76,4 +76,24 @@ class CommunityController extends Controller
 
         return view('community.show', compact('community'));
     }
+    public function join($id)
+    {
+        $community = Community::findOrFail($id);
+
+        if (!$community->members->contains(auth()->id())) {
+            $community->members()->attach(auth()->id());
+        }
+
+        return redirect()->route('community.show', $id)->with('success', 'Joined community successfully!');
+    }
+    public function leave($id)
+    {
+        $community = Community::findOrFail($id);
+
+        if ($community->members->contains(auth()->id())) {
+            $community->members()->detach(auth()->id());
+        }
+
+        return redirect()->route('community.show', $id)->with('success', 'Left community successfully!');
+    }
 }
