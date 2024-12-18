@@ -1,8 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.nav')
 
 @section('title', 'Home')
 
-@section('content')
+@section('page-title', 'Home')
+
+@section('main-content')
 <style>
     body, html {
         height: 100%;
@@ -132,7 +134,7 @@
         @foreach ($communities as $community)
             <div class="card mb-0 community-card">
                 <div class="row g-0">
-                    <div class="col-md-1 d-flex align-items-center justify-content-center p-3 community-image-container">
+                    <div class="col-md-1 align-items-center justify-content-center p-3 community-image-container">
                         <img 
                             src="{{ $community->profile_image ?? 'https://via.placeholder.com/150' }}" 
                             alt="{{ $community->name }}" 

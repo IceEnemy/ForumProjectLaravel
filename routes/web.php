@@ -41,3 +41,4 @@ Route::middleware(['auth.check'])->group(function () {
 });
 
 Route::get('/home', [CommunityController::class, 'index'])->name('home');
+Route::get('/community/{id}', [CommunityController::class, 'show'])->name('community.show');

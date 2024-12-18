@@ -56,7 +56,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // Redirect to dashboard or intended route
-            return redirect()->intended('dashboard')->with('success', 'Logged in successfully!');
+            return redirect()->intended('home')->with('success', 'Logged in successfully!');
         }
 
         // If login fails for any other reason
