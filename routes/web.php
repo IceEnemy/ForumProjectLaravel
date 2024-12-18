@@ -38,6 +38,10 @@ Route::middleware(['auth.check'])->group(function () {
     // Create community 
     Route::post('/communities', [CommunityController::class, 'store'])->name('community.store');
 
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change_password');
+
+
 });
 
 Route::get('/home', [CommunityController::class, 'index'])->name('home');

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -63,5 +65,41 @@ class ProfileController extends Controller
         }
 
         return redirect()->back()->with('error', 'No file was uploaded.');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+        ]);
+
+        $user = Auth::user();
+        $user->update([
+            'username' => $request->username,
+        ]);
+        $user->save();
+
+        return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
+    }
+
+    public function changePassword(Request $request)
+    {   
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        // // Check if the current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+        //     // Log::info('Password mismatch for user ID: ' . $user->id);
+            return redirect()->back()->with('error', 'Current password is incorrect.');
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password updated successfully.');
     }
 }
