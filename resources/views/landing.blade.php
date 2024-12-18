@@ -125,8 +125,14 @@
 <body>
     <div class="top-header">
         <a class="header-left" href="#">READIT</a>
-        <div class="header-right">Forum for Earth.</div>
+        <div class="header-right">
+            <a href="{{ route('login') }}" style="color: white; margin-right: 20px; text-decoration: none; font-weight: bold;">
+                Sign In
+            </a>
+            Forum for Earth.
+        </div>
     </div>
+    
     <div class="readit">
         <h1>Welcome to READIT</h1>
         <p class="text">Welcome to READIT, a platform dedicated to uniting voices for climate action and environmental sustainability. Here, we share ideas, solutions, and stories to combat global warming, reduce waste, and protect our planet. Together, we can make a difference—one conversation at a time.</p>

@@ -42,4 +42,21 @@ class FirebaseService
         // Return the public URL of the uploaded file
         return "https://storage.googleapis.com/{$bucket->name()}/{$path}";
     }
+
+    /**
+     * Delete a file from Firebase Storage.
+     *
+     * @param string $path The path of the file to delete in the storage bucket
+     * @return void
+     * @throws \Kreait\Firebase\Exception\StorageException
+     */
+    public function deleteFile($path)
+    {
+        $bucket = $this->storage->getBucket(); // Retrieve the storage bucket
+        $object = $bucket->object($path); // Get the object from the bucket
+
+        if ($object->exists()) {
+            $object->delete(); // Delete the object if it exists
+        }
+    }
 }

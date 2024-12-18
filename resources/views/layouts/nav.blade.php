@@ -28,7 +28,7 @@
             <!-- Navigation Links -->
             <ul class="nav flex-column mt-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('dashboard') }}">
+                    <a class="nav-link" href="{{ route('home') }}">
                         <span class="ic--round-home"></span> Home
                     </a>
                 </li>
@@ -101,18 +101,20 @@
     }
 
     #sidebar {
-        min-height: 100vh;
-        min-width: 250px;
-        max-width: 300px; 
+        height: 100vh;
+        width: 275px;
         background-color: var(--white);
         color: var(--black);
         flex-shrink: 0;
         padding: 1rem;
+        height: 100vh;
+        position: fixed;
     }
 
     main {
+        margin-left: 275px;
         flex-grow: 1; 
-        overflow-x: auto; 
+        /* overflow-x: auto;  */
     }
     .profile_container{
         background-color: var(--tertiary_purple);
