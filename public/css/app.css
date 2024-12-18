@@ -1,10 +1,11 @@
-:root{
+:root {
     --white: #ffffff;
-    --main_purple: #692BD8;
-    --secondary_purple: #D2D0FF;
-    --tertiary_purple: #E6E3FF;
-    --gray: #EEEEEE;
-    --black: #3B3B3B;
-    --dark_gray: #CCCCCC;
+    --main_purple: #692bd8;
+    --secondary_purple: #d2d0ff;
+    --tertiary_purple: #e6e3ff;
+    --gray: #eeeeee;
+    --black: #3b3b3b;
+    --dark_gray: #cccccc;
     --dark_black: #010101;
+    --dark_purple: #4a00e0;
 }

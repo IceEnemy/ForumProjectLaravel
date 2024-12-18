@@ -19,9 +19,9 @@ class CommunityController extends Controller
     {
         $search = $request->input('search', '');
 
-        $communities = Community::when($search, function($query, $search) {
-            return $query->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%');
+        $communities = Community::when($search, function ($query, $search) {
+            return $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
         })->get();
 
         if ($communities->isEmpty()) {
@@ -57,7 +57,7 @@ class CommunityController extends Controller
             $profileImageUrl = $firebaseService->uploadFile($profileFile, $profilePath);
         }
 
-        Community::create([
+        $community = Community::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'header_image' => $headerImageUrl,
@@ -66,7 +66,14 @@ class CommunityController extends Controller
             'owner_id' => auth()->id(),
         ]);
 
+        $community->members()->attach(auth()->id());
+
         return redirect()->route('home')->with('success', 'Community created successfully!');
     }
+    public function show($id)
+    {
+        $community = Community::findOrFail($id);
 
+        return view('community.show', compact('community'));
+    }
 }

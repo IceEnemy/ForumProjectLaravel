@@ -18,6 +18,7 @@
 
     <!-- Global CSS Variables -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/iconify.css')}}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
 
@@ -26,8 +27,11 @@
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            /* background-color:var(--dark_gray); */
-            /* color: var(--main_purple); */
+        }
+        .container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
         }
     </style>
 </head>
