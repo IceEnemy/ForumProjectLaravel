@@ -124,49 +124,73 @@
     </div>
 
     <!-- Scrollable Posts Section -->
-    <div class="posts-container">
-        @forelse($communityPosts as $post)
-            <a href="{{ route('post.show', $post->id) }}" class="text-decoration-none text-dark">
-                <div class="card mb-3 hover-gray">
-                    <div class="card-body d-flex">
-                        @if($post->image)
-                            <img src="{{ $post->image }}" 
-                                class="rounded me-3" 
-                                style="width: 120px; height: 120px; object-fit: cover;">
-                        @endif
-
-                        <div class="flex-grow-1">
-                            <h5 class="fw-bold">{{ $post->title }}</h5>
-                            <small class="text-muted">{{ $post->created_at->format('d/m/Y') }}</small>
-                            <p class="mb-2">{{ Illuminate\Support\Str::limit($post->content, 100) }}</p>
-                            <div class="d-flex">
-                                <span class="text-muted me-3 d-inline-flex align-items-center flex-shrink-0">
-                                    <i class="bi bi-chat me-1"></i> Comments ({{ $post->comments->count() }})
-                                </span>
-                                <div class="vote-container d-flex align-items-center">
-                                    <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
-                                            <span class="mdi--arrow-up-bold"></span>
-                                        </button>
-                                    </form>
-                                    <span class="mx-2 fw-bold">{{ $post->upvotes->count() - $post->downvotes->count() }}</span>
-                                    <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
-                                            <span class="mdi--arrow-down-bold"></span>
-                                        </button>
-                                    </form>
+    <div class="row">
+        <!-- Posts Section -->
+        <div class="col-lg-9">
+            <div class="posts-container">
+                @forelse($communityPosts as $post)
+                    <a href="{{ route('post.show', $post->id) }}" class="text-decoration-none text-dark">
+                        <div class="card mb-3 hover-gray">
+                            <div class="card-body d-flex">
+                                @if($post->image)
+                                    <img src="{{ $post->image }}" 
+                                        class="rounded me-3" 
+                                        style="width: 120px; height: 120px; object-fit: cover;">
+                                @endif
+    
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold">{{ $post->title }}</h5>
+                                    <small class="text-muted">{{ $post->created_at->format('d/m/Y') }}</small>
+                                    <p class="mb-2">{{ Illuminate\Support\Str::limit($post->content, 100) }}</p>
+                                    <div class="d-flex">
+                                        <span class="text-muted me-3 d-inline-flex align-items-center flex-shrink-0">
+                                            <i class="bi bi-chat me-1"></i> Comments ({{ $post->comments->count() }})
+                                        </span>
+                                        <div class="vote-container d-flex align-items-center">
+                                            <form action="{{ route('post.toggleUpvote', $post->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm p-0 {{ $post->upvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                                                    <span class="mdi--arrow-up-bold"></span>
+                                                </button>
+                                            </form>
+                                            <span class="mx-2 fw-bold">{{ $post->upvotes->count() - $post->downvotes->count() }}</span>
+                                            <form action="{{ route('post.toggleDownvote', $post->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm p-0 {{ $post->downvotes->contains(auth()->id()) ? 'voted' : 'not-voted' }}">
+                                                    <span class="mdi--arrow-down-bold"></span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                @empty
+                    <p>No posts yet.</p>
+                @endforelse
+            </div>
+        </div>
+    
+        <!-- Rules and Description Section -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">About This Community</h5>
+                    <p><strong>Description:</strong> {{ $community->description }}</p>
+                    @if($community->rules)
+                        <p><strong>Rules:</strong></p>
+                        <ul>
+                            @foreach(explode("\n", $community->rules) as $rule)
+                                <li>{{ $rule }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
-            </a>
-        @empty
-            <p>No posts yet.</p>
-        @endforelse
+            </div>
+        </div>
     </div>
+    
     
 </div>
 
