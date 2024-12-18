@@ -5,11 +5,19 @@
 @section('main-content')
 <div class="container mt-4">
     <!-- Back Button -->
-    <div>
+    <div class="mt-3 mb-3">
         <a href="{{ route('home') }}" class="btn text-decoration-none">
             <i class="bi bi-arrow-left"></i> Back
         </a>
+        <!-- Options Button for Admins/Owner -->
+        @if(auth()->id() === $community->owner_id || $community->administrators->contains(auth()->user()))
+            <a href="{{ route('community.settings', $community->id) }}" class="btn btn-secondary btn-action">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        @endif
     </div>
+
+
 
     <!-- Community Header Section -->
     <div class="card mb-4 shadow-sm">
@@ -34,14 +42,29 @@
                 <p class="text-muted">{{ $community->members->count() }} Members</p>
             </div>
             <!-- Join Button -->
-            @if($community->members->contains(auth()->user()))
-                <button class="btn btn-secondary rounded-pill" disabled>Joined</button>
+            @if(auth()->id() === $community->owner_id)
+                <button class="btn btn-secondary rounded-pill" disabled>Owned</button>
             @else
-                <form action="{{ route('community.join', $community->id) }}" method="POST">
-                    @csrf
-                    <button class="btn btn-primary rounded-pill">Join</button>
-                </form>
+                @if($community->members->contains(auth()->user()))
+                    <form action="{{ route('community.leave', $community->id) }}" method="POST" id="leaveCommunityForm">
+                        @csrf
+                        <button 
+                            type="submit" 
+                            class="btn btn-secondary rounded-pill" 
+                            id="joinedButton" 
+                            onmouseover="toggleLeaveButtonText(this)" 
+                            onmouseout="resetButtonText(this)">
+                            Joined
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('community.join', $community->id) }}" method="POST">
+                        @csrf
+                        <button class="btn btn-primary rounded-pill">Join</button>
+                    </form>
+                @endif
             @endif
+
         </div>
     </div>
 
@@ -49,24 +72,60 @@
     <div class="border-top border-bottom py-3 mb-4 sticky-header">
         <div class="d-flex justify-content-between align-items-center gap-5">
             <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createPostModal">+ Add Post</button>
-            <form method="GET" action="{{ route('community.show', $community->id) }}" class="d-flex">
+            {{-- <form method="GET" action="{{ route('community.show', $community->id) }}" class="d-flex">
                 <input type="text" name="search" class="form-control rounded-start" placeholder="Search posts...">
                 <button class="btn btn-light rounded-end" type="submit"><i class="bi bi-search"></i></button>
+            </form> --}}
+            <form method="GET" action="{{ route('community.show', $community->id) }}" class="d-flex">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control" 
+                    placeholder="Search posts..." 
+                    value="{{ request('search')  }}">
+                <button class="btn btn-light" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
             </form>
-            <div class="dropdown">
+            
+            {{-- <div class="dropdown">
                 <button class="btn btn-light border dropdown-toggle" data-bs-toggle="dropdown">Sort By</button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="?sort=latest">Latest</a></li>
                     <li><a class="dropdown-item" href="?sort=oldest">Oldest</a></li>
                     <li><a class="dropdown-item" href="?sort=most_upvoted">Most Upvoted</a></li>
                 </ul>
+            </div> --}}
+            <div class="dropdown">
+                <button class="btn btn-light border dropdown-toggle" data-bs-toggle="dropdown">Sort By</button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item {{ request('sort') === 'latest' ? 'active' : '' }}"
+                            href="{{ route('community.show', ['id' => $community->id, 'sort' => 'latest', 'search' => request('search')]) }}">
+                            Latest
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {{ request('sort') === 'oldest' ? 'active' : '' }}"
+                            href="{{ route('community.show', ['id' => $community->id, 'sort' => 'oldest', 'search' => request('search')]) }}">
+                            Oldest
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {{ request('sort') === 'most_upvoted' ? 'active' : '' }}"
+                            href="{{ route('community.show', ['id' => $community->id, 'sort' => 'most_upvoted', 'search' => request('search')]) }}">
+                            Most Upvoted
+                        </a>
+                    </li>
+                </ul>
             </div>
+            
         </div>
     </div>
 
     <!-- Scrollable Posts Section -->
     <div class="posts-container">
-        @forelse($community->posts as $post)
+        @forelse($communityPosts as $post)
             <a href="{{ route('post.show', $post->id) }}" class="text-decoration-none text-dark">
                 <div class="card mb-3 hover-gray">
                     <div class="card-body d-flex">
@@ -108,6 +167,7 @@
             <p>No posts yet.</p>
         @endforelse
     </div>
+    
 </div>
 
 <!-- Add Post Modal -->
@@ -201,4 +261,21 @@
     background-color: #bbb;
 }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+    function toggleLeaveButtonText(button) {
+        button.innerText = "Leave";
+        button.classList.remove('btn-secondary');
+        button.classList.add('btn-danger');
+    }
+
+    function resetButtonText(button) {
+        button.innerText = "Joined";
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-secondary');
+    }
+</script>
+
 @endpush

@@ -3,7 +3,7 @@
 @section('page-title', 'Edit Post')
 
 @section('main-content')
-<div class="container mt-4">
+<div class="container mt-4 p-3">
     <h2 class="fw-bold">Edit Post</h2>
 
     <form action="{{ route('post.update', $post->id) }}" method="POST" enctype="multipart/form-data">

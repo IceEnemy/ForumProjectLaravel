@@ -51,7 +51,10 @@ Route::middleware(['auth.check'])->group(function () {
     Route::post('/post/{post}/toggle-upvote', [PostController::class, 'toggleUpvote'])->name('post.toggleUpvote');
     Route::post('/post/{post}/toggle-downvote', [PostController::class, 'toggleDownvote'])->name('post.toggleDownvote');
 
-    
+    Route::get('/home', [CommunityController::class, 'index'])->name('home');
+    Route::get('/community/{id}', [CommunityController::class, 'show'])->name('community.show');
+    Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
+    Route::post('/posts/{post}/comment', [PostController::class, 'storeComment'])->name('post.comment');
 });
 
 Route::middleware(['auth.check', 'check.post.permissions'])->group(function () {
@@ -60,8 +63,11 @@ Route::middleware(['auth.check', 'check.post.permissions'])->group(function () {
     Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.delete');
 });
 
-
-Route::get('/home', [CommunityController::class, 'index'])->name('home');
-Route::get('/community/{id}', [CommunityController::class, 'show'])->name('community.show');
-Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
-Route::post('/posts/{post}/comment', [PostController::class, 'storeComment'])->name('post.comment');
+// Community management routes
+Route::middleware(['auth.check', 'check.community.permissions'])->group(function () {
+    Route::get('/community/{community}/settings', [CommunityController::class, 'settings'])->name('community.settings');
+    Route::put('/community/{community}', [CommunityController::class, 'update'])->name('community.update');
+    Route::post('/community/{community}/admin/{user}', [CommunityController::class, 'addAdmin'])->name('community.addAdmin');
+    Route::delete('/community/{community}/admin/{user}', [CommunityController::class, 'removeAdmin'])->name('community.removeAdmin');
+    Route::delete('/community/{community}', [CommunityController::class, 'destroy'])->name('community.delete');
+});

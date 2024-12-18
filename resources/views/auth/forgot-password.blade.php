@@ -38,6 +38,7 @@
                 </div>
             </form>
         </div>
+        doesn't work yet
         <div class="d-flex justify-content-center align-items-center">
             <button type="submit" form="forgotPasswordForm" class="btn btn-primary">
                 Send Password Reset Link

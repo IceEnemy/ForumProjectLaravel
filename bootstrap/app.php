@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.check' => \App\Http\Middleware\AuthCheck::class,
             'check.post.permissions' => \App\Http\Middleware\CheckPostPermissions::class,
+            'check.community.permissions' => \App\Http\Middleware\CheckCommunityPermissions::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

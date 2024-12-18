@@ -87,7 +87,7 @@
         color: black !important;
     }
 
-    .btn-primary {
+    .btnCom {
         border-radius: 30px; 
         border: 1px solid #CCCCCC;
     }
@@ -220,7 +220,7 @@
                         <textarea name="rules" id="rules" class="form-control" rows="3" placeholder="Enter the community rules here..."></textarea>
                         <small class="form-text text-muted">Enter the rules that members should follow in this community.</small>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Create Community</button>
+                    <button type="submit" class="btn btnCom w-100">Create Community</button>
                 </form>
             </div>
         </div>
